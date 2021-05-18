@@ -20,6 +20,8 @@ using Play.Catalog.Service.Entities;
 using MassTransit;
 using MassTransit.Definition;
 using Play.Common.MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Play.Common.Identity;
 
 namespace Play.Catalog.Service
 {
@@ -38,7 +40,19 @@ namespace Play.Catalog.Service
 
             services.AddMongo()
                     .AddMongoRepository<Item>("items")
-                    .AddMassTransitWithRabbitMq(); 
+                    .AddMassTransitWithRabbitMq()
+                    .AddJwtBearerAuthentication();
+
+            services.AddAuthorization(options => {
+                options.AddPolicy(Policies.Read, policy => {
+                    policy.RequireRole("Admin");
+                    policy.RequireClaim("scope", "catalog.readaccess", "catalog.fullaccess");
+                });
+                options.AddPolicy(Policies.Write, policy => {
+                    policy.RequireRole("Admin");
+                    policy.RequireClaim("scope", "catalog.writeaccess", "catalog.fullaccess");
+                });
+            });
 
             services.AddControllers(options => {
                 options.SuppressAsyncSuffixInActionNames = false;
@@ -64,6 +78,7 @@ namespace Play.Catalog.Service
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

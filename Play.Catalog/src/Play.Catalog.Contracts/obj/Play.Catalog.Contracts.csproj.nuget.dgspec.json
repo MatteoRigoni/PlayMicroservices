@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj": {}
+    "c:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj": {}
   },
   "projects": {
-    "C:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj": {
+    "c:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj",
+        "projectUniqueName": "c:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj",
         "projectName": "Play.Catalog.Contracts",
-        "projectPath": "C:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj",
+        "projectPath": "c:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\Play.Catalog.Contracts.csproj",
         "packagesPath": "C:\\Users\\matte\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\obj\\",
+        "outputPath": "c:\\Users\\matte\\source\\repos\\Play.Microservices\\Play.Catalog\\src\\Play.Catalog.Contracts\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\matte\\AppData\\Roaming\\NuGet\\NuGet.Config",

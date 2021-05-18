@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Common;
 using Play.Inventory.Service.Clients;
@@ -14,13 +16,15 @@ namespace Play.Inventory.Service.Controllers
     [Route("items")]
     public class ItemsController : ControllerBase
     {
+        private const string AdminRole = "Admin";
+
         private readonly IBaseRepository<InventoryItem> inventoryItemsRepository;
         private readonly IBaseRepository<CatalogItem> catalogItemsRepository;
         private readonly CatalogClient catalogClient;
 
         public ItemsController(
-            IBaseRepository<InventoryItem> inventoryItemsRepository, 
-            IBaseRepository<CatalogItem> catalogItemsRepository, 
+            IBaseRepository<InventoryItem> inventoryItemsRepository,
+            IBaseRepository<CatalogItem> catalogItemsRepository,
             CatalogClient catalogClient)
         {
             this.inventoryItemsRepository = inventoryItemsRepository;
@@ -32,6 +36,11 @@ namespace Play.Inventory.Service.Controllers
         public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetAsync(Guid userId)
         {
             if (userId == Guid.Empty) return BadRequest("User not specified");
+
+            var currentUserId = User.FindFirstValue("sub");
+            if (Guid.Parse(currentUserId) != userId)
+                if (!User.IsInRole(AdminRole))
+                    return Unauthorized();
 
             var inventoryItemEntities = await inventoryItemsRepository.GetAllAsync(item => item.UserId == userId);
             var itemIds = inventoryItemEntities.Select(item => item.CatalogItemId);
@@ -65,6 +74,7 @@ namespace Play.Inventory.Service.Controllers
         // }
 
         [HttpPost]
+        [Authorize(Roles = AdminRole)]
         public async Task<ActionResult> PostAsync(GrantItemsDto grantItemsDto)
         {
             var inventoryItem = await inventoryItemsRepository.GetItemAsync(
@@ -81,15 +91,15 @@ namespace Play.Inventory.Service.Controllers
                     AcquiredDate = DateTimeOffset.UtcNow
                 };
 
-                await inventoryItemsRepository.CreateAsync(inventoryItem); 
+                await inventoryItemsRepository.CreateAsync(inventoryItem);
             }
             else
             {
                 inventoryItem.Quantity += grantItemsDto.Quantity;
                 await inventoryItemsRepository.UpdateAsync(inventoryItem);
-            }   
+            }
 
             return Ok();
-        }   
+        }
     }
 }

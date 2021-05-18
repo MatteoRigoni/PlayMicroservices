@@ -8,6 +8,7 @@ using Play.Catalog.Service.Entities;
 using Play.Catalog.Common;
 using MassTransit;
 using Play.Catalog.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Play.Catalog.Service.Controllers
 {
@@ -15,6 +16,8 @@ namespace Play.Catalog.Service.Controllers
     [Route("items")]
     public class ItemsController : ControllerBase
     {
+        private const  string AdminRole = "Admin";
+
         private readonly IBaseRepository<Item> itemsRepository;
         private readonly IPublishEndpoint publishEndPoint;
 
@@ -25,6 +28,7 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policies.Read)]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetAsync()
         {
             var items = (await itemsRepository.GetAllAsync())
@@ -34,6 +38,7 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policies.Read)]
         public async Task<ActionResult<ItemDto>> GetByIdAsync(Guid id) 
         {
             var item = await itemsRepository.GetItemAsync(id);
@@ -42,6 +47,7 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policies.Write)]
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto createItemDto)
         {
             var item = new Item {
@@ -59,6 +65,7 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policies.Write)]
         public async Task<IActionResult> UpdateItemAsync(Guid id, UpdateItemDto updateItemDto)
         {
             var existingItem = await itemsRepository.GetItemAsync(id);
@@ -76,6 +83,7 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policies.Write)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var existingItem = await itemsRepository.GetItemAsync(id);
